@@ -1,61 +1,85 @@
-# Online Shopping Store
+# Modern Online Shopping Platform
 
-> Full-stack e-commerce shopping platform with Sanity CMS and Stripe payments.
+> Full-stack headless e-commerce platform built with Next.js 15, Sanity CMS, NextAuth authentication, and Stripe payment processing.
 
-## Overview
+## 1. System Overview
 
-An enterprise-grade headless e-commerce platform built with Next.js App Router, Sanity CMS for product catalog management, NextAuth for user authentication, and Stripe for secure payments.
+An enterprise-grade headless e-commerce platform providing end-to-end shopping workflows: real-time content modeling in Sanity CMS, user session management with NextAuth, dynamic cart state, and PCI-compliant checkout execution via Stripe webhooks.
 
-## Key Features
+## 2. Technical Architecture
 
-- Headless CMS integration with Sanity for real-time inventory updates
-- Full Stripe checkout flow with test keys and webhook processing
-- Secure session authentication with NextAuth
-- Sanitized environment configuration with production-ready .env.example
+```
+[ Customer Interface ]
+        │
+        ▼
+[ Next.js 15 App Router ] ── (Server Components & Edge Middleware)
+        │
+        ├──▶ [ Sanity CMS Client ] ── (Product Catalog & Inventory Sync)
+        ├──▶ [ NextAuth Engine ] ── (JWT / OAuth User Authentication)
+        └──▶ [ Stripe Payment Gateway ] ── (Checkout Sessions & Webhook Handlers)
+```
 
-## Architecture and Technology Stack
+### Technology Stack
+- **Framework:** Next.js (App Router, TypeScript)
+- **Headless CMS:** Sanity.io (`sanity.client.ts`, `sanity.config.ts`)
+- **Payment Gateway:** Stripe API (Stripe Elements, Webhooks)
+- **Authentication:** NextAuth.js
+- **Styling:** Tailwind CSS, PostCSS
+- **CI/CD:** Automated GitHub Actions build pipeline
 
-- **Core Technologies:** Next.js, React, TypeScript, Sanity CMS, Stripe, NextAuth, Tailwind CSS
+## 3. Core Capabilities & Security Guardrails
+
+- **Sanitized Credential Architecture:** Environment configuration isolated into `.env.example` templates; zero credentials stored in version control.
+- **Headless Content Pipelines:** Live inventory updates directly orchestrated through Sanity Studio without code redeployments.
+- **End-to-End Payment Flow:** Stripe checkout sessions with server-side signature verification and webhook transaction validation.
+- **Edge Middleware Security:** Protected account and checkout routes enforced via `middleware.ts`.
+
+## 4. Directory Structure
+
+```
+online-shopping-store/
+├── .env.example              # Sanitized environment template
+├── middleware.ts             # Route authentication and session verification
+├── sanity.client.ts          # Sanity GROQ query client configuration
+├── sanity.config.ts          # Sanity Studio CMS schema configuration
+├── src/
+│   ├── app/                  # App Router views and API webhook endpoints
+│   ├── components/           # Cart slide-over, product grids, checkout forms
+│   └── lib/                  # Stripe helpers and authentication providers
+└── package.json              # Project dependencies
+```
+
+## 5. Getting Started
+
+### Environment Configuration
+
+Create a `.env.local` file based on the provided template:
+
+```bash
+cp .env.example .env.local
+```
+
+Populate the required credentials:
+```env
+NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id
+NEXT_PUBLIC_SANITY_DATASET=production
+SANITY_API_TOKEN=your_sanity_token
+NEXTAUTH_SECRET=your_nextauth_secret
+STRIPE_SECRET_KEY=your_stripe_secret_key
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_pub_key
+```
+
+### Installation and Run
+
+```bash
+npm install
+npm run dev
+```
+
+Visit [http://localhost:3000](http://localhost:3000).
+
+## 6. Author and License
+
 - **Author:** Yusra Saleem
 - **Portfolio:** [yusrasaleem.dev](https://yusrasaleem.dev)
-
-## Getting Started
-
-### Prerequisites
-
-Ensure you have the required runtime environment installed for this repository:
-- Node.js (v18+) for JavaScript/TypeScript projects
-- Python (3.10+) for Python services and agent workflows
-
-### Installation
-
-Clone the repository to your local machine:
-
-```bash
-git clone https://github.com/Yusra-Saleem/online-shopping-store.git
-cd online-shopping-store
-```
-
-Install dependencies:
-
-```bash
-# For Node / Next.js projects
-npm install
-
-# For Python projects
-pip install -r requirements.txt
-```
-
-### Running Locally
-
-```bash
-# Start local development server
-npm run dev
-
-# Or for Python entry points
-python main.py
-```
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for complete details.
+- **License:** Licensed under the [MIT License](LICENSE).
